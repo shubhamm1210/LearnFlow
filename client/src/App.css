@@ -1,0 +1,3 @@
+
+.topic-pills{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.topic-pills .topic-pill{margin:0}

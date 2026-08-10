@@ -1,0 +1,37 @@
+LEARNFLOW — START HERE
+
+1) Make sure MongoDB is running locally.
+   Default URI: mongodb://127.0.0.1:27017/LearnFlow
+
+2) Open server/.env and replace:
+   YOUTUBE_API_KEY=PASTE_YOUR_YOUTUBE_API_KEY_HERE
+   with your own YouTube Data API v3 key.
+
+3) Terminal 1:
+   cd server
+   npm install
+   npm run dev
+
+4) Terminal 2:
+   cd client
+   npm install
+   npm run dev
+
+5) Open:
+   http://localhost:5173
+
+6) Register -> Dashboard -> paste a PUBLIC YouTube playlist URL -> Import Playlist.
+
+7) Open the course. Click "Mark complete" after watching a lesson.
+   Progress, completion counts and the 7-day activity chart update from the saved MongoDB data.
+
+ATLAS LATER
+
+You do not need to change the application code.
+Only replace server/.env MONGO_URI with your friend's/your Atlas connection string.
+For deployment, also set VITE_API_URL in the frontend environment to the deployed backend URL.
+
+SECURITY
+
+The API key that was previously visible in screenshots has intentionally NOT been included.
+Create/use a fresh YouTube API key and keep it in server/.env only.

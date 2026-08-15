@@ -193,5 +193,5 @@ To use MongoDB Atlas instead of a local MongoDB instance, replace the `MONGO_URI
 Computer Engineering Undergraduate
 NIAMT Ranchi
 
-* GitHub: https://github.com/YOUR-USERNAME
-* LinkedIn: https://www.linkedin.com/in/YOUR-USERNAME/
+* GitHub: https://github.com/shubhamm1210
+* LinkedIn: https://www.linkedin.com/in/shubhamkumar1210/

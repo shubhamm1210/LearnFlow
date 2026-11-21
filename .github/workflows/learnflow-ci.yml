@@ -24,6 +24,10 @@ jobs:
         working-directory: server
         run: npm ci
 
+      - name: Check evaluator syntax
+        working-directory: server
+        run: node --check scripts/evaluateClassifier.js
+
       - name: Test topic classifier
         working-directory: server
         run: npm test

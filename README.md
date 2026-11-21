@@ -1,197 +1,138 @@
-# 📚 LearnFlow — YouTube Learning Tracker
+# LearnFlow — YouTube Learning Tracker
 
-LearnFlow turns public YouTube playlists into structured, trackable learning courses.
+LearnFlow turns public YouTube playlists into structured, trackable learning courses. It imports playlist and video metadata, classifies video titles into one or more topics, and tracks course progress.
 
-It imports playlist and video information from YouTube, organizes videos by topic, and tracks learning progress based on the topics identified during playlist import.
+## How it works
 
----
+1. A user imports a public YouTube playlist.
+2. The backend fetches playlist and video metadata using YouTube Data API v3.
+3. Each video title is classified locally into one or more topics.
+4. The playlist is saved as a structured course.
+5. Completing a video updates saved progress without re-running classification.
 
-## 🚀 How It Works
+## Topic intelligence
 
-1. Import a public YouTube playlist.
-2. LearnFlow fetches the playlist and video metadata using the YouTube Data API v3.
-3. Each video title is classified into one or more relevant topics.
-4. The playlist becomes a structured learning course.
-5. As videos are completed, topic-level progress is updated.
+LearnFlow uses a deterministic, local title classifier. It does not make an AI request for every video. A title can map to multiple topics; titles with no taxonomy match fall back to `General`.
 
-Topic classification is performed once when the playlist is imported. Completing a video only updates the existing topic performance instead of running the classifier again.
+The taxonomy spans computer science, mathematics and science, competitive exams, business and marketing, medicine and health, languages, design, engineering, and personal development.
 
----
+The classifier is rule-based. Its accuracy has not yet been evaluated against a manually labelled benchmark dataset, so this README does not claim an accuracy percentage.
 
-## 🧠 Topic Intelligence
+## Features
 
-LearnFlow uses a deterministic, local classification system to categorize video titles without making an AI request for every video.
+- Import public YouTube playlists using YouTube Data API v3
+- Multi-topic video-title classification
+- Topic-level learning progress
+- General fallback for ambiguous titles
+- JWT-based authentication
+- React + Node.js + Express + MongoDB architecture
+- Separate frontend and backend deployment configuration
 
-A video can belong to multiple topics. If a title cannot be confidently classified, it falls back to `General`.
+## Tech stack
 
-### Supported Domains
+| Layer | Technology |
+|---|---|
+| Frontend | React, Vite |
+| Backend | Node.js, Express |
+| Database | MongoDB, Mongoose |
+| Authentication | JWT |
+| External API | YouTube Data API v3 |
 
-* **Computer Science & Technology:** Web, Cloud, Cybersecurity, Data & ML
-* **Mathematics & Sciences**
-* **Competitive Exams:** Maths, English, GK, Geography, History, Polity, Economics, Current Affairs, Defence, Aptitude & Reasoning
-* **Marketing:** SEO, Sales, Lead Generation, Branding
-* **Finance:** Accounting, Investing & Trading
-* **Medicine & Health**
-* **Languages**
-* **Design & Creative Tools**
-* **Engineering**
-* **Personal Development & Career**
-
-The classifier is deliberately deterministic and local, making playlist imports predictable and avoiding repeated external AI requests.
-
----
-
-## ✨ Key Features
-
-* Import public YouTube playlists as learning courses
-* Fetch playlist and video metadata using YouTube Data API v3
-* Automatic topic classification of video titles
-* Support for multiple topics per video
-* Topic-level learning progress tracking
-* `General` fallback for ambiguous titles
-* Local and deterministic classification
-* MERN-based full-stack architecture
-
----
-
-## 🏗️ Tech Stack
-
-### Frontend
-
-* React
-* Vite
-
-### Backend
-
-* Node.js
-* Express.js
-
-### Database
-
-* MongoDB
-
-### API
-
-* YouTube Data API v3
-
----
-
-## 📂 Project Structure
+## Repository structure
 
 ```text
 LearnFlow/
-├── client/
-│   ├── ...
-│   └──
-│
-├── server/
-│   ├── ...
-│   └──
-│
+├── client/                 # React + Vite frontend
+├── server/                 # Express API
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── tests/
+│   └── utils/topicClassifier.js
+├── docs/
 └── README.md
 ```
 
----
+## Local development
 
-## ⚙️ Local Setup
+### Prerequisites
 
-### 1. Clone the repository
+- Node.js LTS
+- npm
+- MongoDB (local instance or Atlas)
+- YouTube Data API v3 key
+
+### Backend
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git
-cd YOUR-REPOSITORY
+git clone https://github.com/shubhamm1210/LearnFlow.git
+cd LearnFlow/server
+npm install
 ```
 
-### 2. Start the server
+Copy `.env.example` to `.env` and configure `MONGO_URI`, `JWT_SECRET`, `YOUTUBE_API_KEY`, `PORT`, and `CLIENT_URL`. Keep real credentials out of Git.
+
+Start the API:
+
+```bash
+npm run dev
+```
+
+### Frontend
+
+In a second terminal:
+
+```bash
+cd LearnFlow/client
+npm install
+npm run dev
+```
+
+Set `VITE_API_URL` when the backend is running at a non-default address. The local default is `http://localhost:5000`.
+
+## Tests
+
+The topic classifier tests use Node's built-in test runner and do not require MongoDB or YouTube API credentials:
 
 ```bash
 cd server
-npm install
-npm run dev
+npm test
 ```
 
-Create `server/.env` using `.env.example` and add your YouTube Data API v3 key.
+To measure accuracy on your own hand-labelled sample (recommended: 50–100 titles from varied playlists), prepare a JSON file with this structure:
 
-Local MongoDB is used by default.
+```json
+[
+  {
+    "title": "Binary Search in a Sorted Array",
+    "expectedTopics": ["Binary Search", "Arrays"]
+  }
+]
+```
 
-### 3. Start the client
-
-Open a new terminal:
+Then run the evaluator:
 
 ```bash
-cd client
-npm install
-npm run dev
+cd server
+node scripts/evaluateClassifier.js path/to/labelled-titles.json
 ```
 
-Open:
+It reports exact-match accuracy and micro-averaged precision, recall, and F1. The expected topics must be assigned by a human; the evaluator does not create ground truth.
 
-```text
-http://localhost:5173
-```
-
----
-
-## 🌐 Deployment
+## Deployment
 
 ### Backend — Render
 
-Set the service root directory to:
-
-```text
-server
-```
-
-Use:
-
-```text
-Build command: npm install
-Start command: npm start
-```
-
-Add the following environment variables:
-
-```env
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
-YOUTUBE_API_KEY=your_youtube_api_key
-CLIENT_URL=your_frontend_url
-```
-
-`CLIENT_URL` can contain comma-separated allowed frontend origins.
+Set the service root directory to `server`, install with `npm install`, and start with `npm start`. Configure the backend environment variables using `server/.env.example`.
 
 ### Frontend — Vercel
 
-Set the project root directory to:
+Set the project root directory to `client`, build with `npm run build`, and set `VITE_API_URL` to the deployed backend origin.
 
-```text
-client
-```
+## Screenshots
 
-Configure:
+Add current screenshots of the landing page, dashboard, and course detail page under `docs/screenshots/` and link them here. The repository does not currently contain these screenshots.
 
-```env
-VITE_API_URL=https://your-service.onrender.com
-```
+## Author
 
-The client automatically appends `/api` when required.
-
----
-
-## 🗄️ MongoDB
-
-The application reads its database connection entirely from `MONGO_URI`.
-
-To use MongoDB Atlas instead of a local MongoDB instance, replace the `MONGO_URI` value in the deployment environment. No MongoDB-specific changes to the application code are required.
-
----
-
-## 👨‍💻 Author
-
-**Shubham Kumar**
-
-Computer Engineering Undergraduate
-NIAMT Ranchi
-
-* GitHub: https://github.com/shubhamm1210
-* LinkedIn: https://www.linkedin.com/in/shubhamkumar1210/
+**Shubham Kumar** · [GitHub](https://github.com/shubhamm1210) · [LinkedIn](https://www.linkedin.com/in/shubhamkumar1210/)

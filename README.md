@@ -121,15 +121,29 @@ It reports exact-match accuracy and micro-averaged precision, recall, and F1. Th
 
 ## Deployment
 
+The repository is a split frontend/backend app. **Do not deploy from the repository root**: there is no root-level `package.json`. Deploy the frontend and API as separate services.
+
 ### Backend — Render
 
-Set the service root directory to `server`, install with `npm install`, and start with `npm start`. Configure the backend environment variables using `server/.env.example`.
+A Render Blueprint is provided in `render.yaml`.
+
+1. In Render, create a new Blueprint and select this repository.
+2. Render should detect the Blueprint and configure the web service with `server` as its root directory.
+3. Add the required secret values when prompted: `MONGO_URI`, `JWT_SECRET`, `YOUTUBE_API_KEY`, and `CLIENT_URL`.
+4. Set `CLIENT_URL` to the exact deployed Vercel origin (no trailing slash). Keep secrets in Render's environment settings; never commit them.
+5. After deployment, verify the service root responds with `{"success":true,"message":"LearnFlow API Running"}`.
+
+The service listens on Render's injected `PORT` and starts only after MongoDB connects.
 
 ### Frontend — Vercel
 
-Set the project root directory to `client`, build with `npm run build`, and set `VITE_API_URL` to the deployed backend origin.
+1. Import the same repository into Vercel.
+2. Set the project root directory to `client`.
+3. Use `npm run build` as the build command and `dist` as the output directory.
+4. Set `VITE_API_URL` to the Render service origin, for example `https://your-service.onrender.com` (do not append `/api`; the frontend adds it).
+5. Deploy, then set the resulting Vercel origin as Render's `CLIENT_URL` and redeploy the backend if needed.
 
-.
+`client/vercel.json` provides the SPA fallback so direct navigation to client routes serves the React app.
 
 ## Author
 

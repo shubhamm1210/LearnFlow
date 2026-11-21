@@ -129,9 +129,7 @@ Set the service root directory to `server`, install with `npm install`, and star
 
 Set the project root directory to `client`, build with `npm run build`, and set `VITE_API_URL` to the deployed backend origin.
 
-## Screenshots
-
-Add current screenshots of the landing page, dashboard, and course detail page under `docs/screenshots/` and link them here. The repository does not currently contain these screenshots.
+.
 
 ## Author
 

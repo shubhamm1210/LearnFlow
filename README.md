@@ -99,7 +99,25 @@ cd server
 npm test
 ```
 
-A manually labelled set of real playlist titles is still needed before reporting classification accuracy.
+To measure accuracy on your own hand-labelled sample (recommended: 50–100 titles from varied playlists), prepare a JSON file with this structure:
+
+```json
+[
+  {
+    "title": "Binary Search in a Sorted Array",
+    "expectedTopics": ["Binary Search", "Arrays"]
+  }
+]
+```
+
+Then run the evaluator:
+
+```bash
+cd server
+node scripts/evaluateClassifier.js path/to/labelled-titles.json
+```
+
+It reports exact-match accuracy and micro-averaged precision, recall, and F1. The expected topics must be assigned by a human; the evaluator does not create ground truth.
 
 ## Deployment
 
